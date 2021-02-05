@@ -1,0 +1,51 @@
+{
+  "name": "z-mock-server",
+  "version": "1.0.2",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "toPublish": "npm run build & npm publish",
+    "build": "tsc -p ./src/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "dist",
+    "types",
+    "myDataBase.json"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zht826/z-mock-server.git"
+  },
+  "keywords": [
+    "mock",
+    "server"
+  ],
+  "author": "zht",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zht826/z-mock-server/issues"
+  },
+  "homepage": "https://github.com/zht826/z-mock-server#readme",
+  "devDependencies": {
+    "@types/koa": "^2.11.7",
+    "@types/koa-bodyparser": "^4.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "eslint": "^7.19.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "ts-node": "^9.1.1",
+    "tsc": "^1.20150623.0",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.0.0",
+    "node-json-db": "^1.1.0"
+  }
+}
