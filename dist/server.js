@@ -72,10 +72,6 @@ var Server = /** @class */ (function () {
                         case 0: return [4 /*yield*/, next()];
                         case 1:
                             _c.sent();
-                            if (request.method !== 'POST') {
-                                response.body = '暂时仅支持POST请求方式';
-                                return [2 /*return*/];
-                            }
                             if (!request.path.includes(options.apiBaseUrl)) return [3 /*break*/, 6];
                             body = { data: __assign({ code: '0', msg: '' }, options.rightDataTemplate) };
                             headersConfig_1 = {};
@@ -86,8 +82,8 @@ var Server = /** @class */ (function () {
                         case 2:
                             _c.trys.push([2, 4, , 5]);
                             return [4 /*yield*/, axios_1.default.request({
-                                    url: options.apiDomain + request.path,
-                                    method: 'POST',
+                                    url: options.apiDomain + request.url,
+                                    method: request.method,
                                     timeout: options.timeout || 3000,
                                     headers: __assign({ cookie: request.header.cookie }, headersConfig_1),
                                     data: __assign({}, request.body)
@@ -101,7 +97,7 @@ var Server = /** @class */ (function () {
                             body = {
                                 data: {
                                     code: '99999',
-                                    msg: '服务器出错了，我是代理返回的'
+                                    msg: e_1
                                 }
                             };
                             return [3 /*break*/, 5];
@@ -132,9 +128,18 @@ var Server = /** @class */ (function () {
         app.listen(options.port || 3000);
     }
     Server.prototype.checkBodyRight = function (data, rightData) {
-        return Object.keys(rightData).every(function (key) {
-            return rightData[key] === data[key];
-        });
+        if (Array.isArray(rightData)) {
+            return rightData.some(function (r) {
+                return Object.keys(r).every(function (key) {
+                    return r[key] === data[key];
+                });
+            });
+        }
+        else {
+            return Object.keys(rightData).every(function (key) {
+                return rightData[key] === data[key];
+            });
+        }
     };
     return Server;
 }());

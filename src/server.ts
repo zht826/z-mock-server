@@ -1,5 +1,5 @@
 import Koa from 'koa'
-import axios from 'axios'
+import axios, { Method } from 'axios'
 import db from './db'
 import bodyParser from 'koa-bodyparser'
 import { JsonDB } from 'node-json-db'
@@ -17,10 +17,6 @@ class Server {
     app.use(bodyParser())
     app.use(async ({ request, response }, next) => {
       await next()
-      if (request.method !== 'POST') {
-        response.body = '暂时仅支持POST请求方式'
-        return
-      }
       if (request.path.includes(options.apiBaseUrl)) {
         let body = { data: { code: '0', msg: '', ...options.rightDataTemplate } }
         const headersConfig: AnyObj = {}
@@ -29,8 +25,8 @@ class Server {
         })
         try {
           body = await axios.request({
-            url: options.apiDomain + request.path,
-            method: 'POST',
+            url: options.apiDomain + request.url,
+            method: request.method as Method,
             timeout: options.timeout || 3000,
             headers: {
               cookie: request.header.cookie,
@@ -45,7 +41,7 @@ class Server {
           body = {
             data: {
               code: '99999',
-              msg: '服务器出错了，我是代理返回的'
+              msg: e
             }
           }
         }
@@ -72,10 +68,18 @@ class Server {
     app.listen(options.port || 3000)
   }
 
-  checkBodyRight (data: AnyObj, rightData: AnyObj): boolean {
-    return Object.keys(rightData).every(key => {
-      return rightData[key] === data[key]
-    })
+  checkBodyRight (data: AnyObj, rightData: AnyObj | AnyObj[]): boolean {
+    if (Array.isArray(rightData)) {
+      return rightData.some(r => {
+        return Object.keys(r).every(key => {
+          return r[key] === data[key]
+        })
+      })
+    } else {
+      return Object.keys(rightData).every(key => {
+        return rightData[key] === data[key]
+      })
+    }
   }
 }
 

@@ -27,7 +27,7 @@ export interface MockOptions {
    * 正确的报文格式，用于判断返回数据是否正确
    * eg: { code: 200 }
    */
-  rightDataTemplate: AnyObj,
+  rightDataTemplate: AnyObj | AnyObj[],
   /**
    * 排除的报文格式
    * eg: { code: 402 }
