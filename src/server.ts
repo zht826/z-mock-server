@@ -4,7 +4,7 @@ import db from './db'
 import bodyParser from 'koa-bodyparser'
 import { JsonDB } from 'node-json-db'
 import { AnyObj, MockOptions } from '../types'
-
+import KoaStatic from 'koa-static'
 class Server {
   app: Koa;
   options: MockOptions;
@@ -15,6 +15,7 @@ class Server {
     this.options = options
     this.db = db(options.apiBaseUrl)
     app.use(bodyParser())
+    app.use(KoaStatic('static'))
     app.use(async ({ request, response }, next) => {
       await next()
       if (request.path.includes(options.apiBaseUrl)) {
